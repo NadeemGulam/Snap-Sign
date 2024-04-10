@@ -28,13 +28,15 @@ export class AppComponent {
   canvas!: ElementRef<HTMLCanvasElement>;
 
   ngAfterViewInit() {
-    this.adjustCanvasSize();
-    if (this.signaturePadElement) {
-      this.signPad = new SignaturePad(this.signaturePadElement.nativeElement);
-      this.signPad.clear();
-      this.signPad.backgroundColor = this.bgColor;
-      this.signPad.penColor = this.penColor;
-      this.updateSignaturePadProperties();
+    if (typeof window !== 'undefined') {
+      this.adjustCanvasSize();
+      if (this.canvas) {
+        this.signPad = new SignaturePad(this.canvas.nativeElement);
+        this.signPad.clear();
+        this.signPad.backgroundColor = this.bgColor;
+        this.signPad.penColor = this.penColor;
+        this.updateSignaturePadProperties();
+      }
     }
   }
   adjustCanvasSize() {
