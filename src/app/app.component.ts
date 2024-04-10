@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import SignaturePad from 'signature_pad';
 import { FormsModule } from '@angular/forms';
 
@@ -24,9 +24,11 @@ export class AppComponent {
   penColor: string = 'black'
 
   constructor() { }
-
+  @ViewChild('signPadCanvas')
+  canvas!: ElementRef<HTMLCanvasElement>;
 
   ngAfterViewInit() {
+    this.adjustCanvasSize();
     if (this.signaturePadElement) {
       this.signPad = new SignaturePad(this.signaturePadElement.nativeElement);
       this.signPad.clear();
@@ -34,6 +36,16 @@ export class AppComponent {
       this.signPad.penColor = this.penColor;
       this.updateSignaturePadProperties();
     }
+  }
+  adjustCanvasSize() {
+    const canvasElement = this.canvas.nativeElement;
+    canvasElement.width = window.innerWidth * 0.8; // Adjust as needed
+    canvasElement.height = window.innerHeight * 0.5; // Adjust as needed
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.adjustCanvasSize();
   }
 
   private updateSignaturePadProperties() {
